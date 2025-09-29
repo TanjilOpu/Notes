@@ -12,3 +12,16 @@ It contains non-member functions that implement common algorithms like sorting, 
 
 4.#include<cctype>
 certain category type like(ischar,islower,isupper,isdigit)
+
+5
+#include<cppconn/driver.h>
+#include<cppconn/connection.h>
+#include<cppconn/statement.h>            //used for executing SQL queries (like SELECT, INSERT, UPDATE) without parameters.
+#include<cppconn/prepared_statement.h>   //Provides sql::PreparedStatement class – lets you write parameterized queries safely.(Prevents SQL injection and is faster for repeated queries.)
+#include<cppconn/resultset.h>          //select all form .............
+#include<cppconn/exception.h>
+
+driver + connection → connect to MySQL
+statement + prepared_statement → send queries
+resultset → read query results
+exception → catch errors safely
