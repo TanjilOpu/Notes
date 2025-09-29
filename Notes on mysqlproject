@@ -25,3 +25,52 @@ driver + connection → connect to MySQL
 statement + prepared_statement → send queries
 resultset → read query results
 exception → catch errors safely
+
+
+6.string to_upper(string s)
+{
+	transform(s.begin(), s.end(), s.begin, [](unsigned char c) {
+		return toupper(c);
+		});
+	return s;
+
+transform(...)
+This is a standard algorithm from <algorithm>.
+It applies a transformation to each element in a range.
+Here, it takes:
+s.begin() → start of the string
+s.end() → end of the string
+s.begin() → where to write the result (overwriting original string)
+A lambda function to transform each character.
+
+
+7.
+int get_numeric_input(const string &prompt, int default_value, bool allow_zero = true)
+{
+    int value;
+    cout << prompt;
+    while (true)
+    {
+        if (cin >> value)
+        {
+            if (!allow_zero && value <= 0)
+            {
+                cout << "Value must be greater than zero. Please enter a valid number (e.g., " << default_value << "): ";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                continue;
+            }
+            // CRITICAL: Successful numeric read leaves a newline. We MUST ignore it here.
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return value;
+        }
+        else
+        {
+            cout << "Invalid input. Please enter a number (e.g., " << default_value << "): ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+}
+This is a C++ function named get_numeric_input designed to robustly read and validate an integer value from the user's input.
+It handles two main types of errors: non-numeric input (like letters) and invalid zero/negative values when restricted.
