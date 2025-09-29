@@ -1,0 +1,14 @@
+1. #include <sstream> 
+directive includes the String Stream library, which provides classes 
+like std::stringstream, std::istringstream, and std::ostringstream to treat strings as I/O streams 
+for in-memory formatting, type conversion (e.g., number-to-string and vice-versa), and string parsing.
+
+
+2. #include<limits>
+Common Use: Accessing the maximum and minimum possible values for a given type, determining its size, or checking if it's signed.
+
+3. #include<algorithm>
+It contains non-member functions that implement common algorithms like sorting, searching, modifying, and comparing data sequences.
+
+4.#include<cctype>
+certain category type like(ischar,islower,isupper,isdigit)
