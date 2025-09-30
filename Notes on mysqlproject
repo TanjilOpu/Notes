@@ -74,3 +74,86 @@ int get_numeric_input(const string &prompt, int default_value, bool allow_zero =
 }
 This is a C++ function named get_numeric_input designed to robustly read and validate an integer value from the user's input.
 It handles two main types of errors: non-numeric input (like letters) and invalid zero/negative values when restricted.
+
+8.
+void setup_database(sql::Connection* con)
+{
+    sql::Statement* stmt = nulptr;
+}
+sql::Connection* con: It takes one parameter: a pointer to an active database connection.
+This connection object (con) is what the function would use to send SQL commands to the MySQL server.
+sql::Statement* stmt = nullptr;
+This is the entire body of the function.
+It declares a pointer named stmt of type sql::Statement. This is the object used to execute SQL commands.
+It initializes this pointer to nullptr (a null pointer).
+
+
+9.
+con->setSchema(DB_NAME) is a method call in C++ using the MySQL Connector/C++ library. 
+Its work is to specify the default database (schema) that all subsequent SQL statements will operate on using the given connection.
+
+
+10.
+stmt = con->createStatement();
+Work: This line creates a new object designed to handle the execution of simple, non-parameterized SQL commands.
+ stmt->execute(create_table_sql);
+Work: This line takes the prepared SQL command and sends it to the MySQL server for immediate processing.
+execute(...): This method is called to execute any type of SQL command, regardless of whether it returns data (like SELECT)
+or modifies the database (like INSERT, UPDATE, DELETE, or in this case, CREATE TABLE).
+
+summary, these two lines allocate a resource (stmt) to package and
+execute the CREATE TABLE command contained in the create_table_sql string.
+
+11. delete stmt
+You need to call delete stmt; because the sql::Statement object (pointed to by stmt) was created using the con->createStatement() method,
+which typically uses the C++ keyword new internally. In C++, when you create an object using new (or a function that allocates memory dynamically,
+like createStatement()), you are responsible for freeing that memory using the corresponding delete keyword.
+This practice is essential for resource management and preventing memory leaks.
+
+12.
+catch (sql::SQLException& e)
+{
+    cerr << "SQL Error during setup: " << e.what() << endl;
+    if (stmt)
+        delete stmt;
+    throw;
+}
+Reports the Error. It prints an error message to the standard error stream (cerr), 
+including the descriptive text provided by the e.what() method. connection lost, invalid SQL, table already exists
+
+throw:   This ensures that the error is not simply swallowed; it allows functions higher up the call stack to be informed that
+           the database setup failed, typically leading to the termination of the program
+
+13.
+        pstm = con->prepareStatement(insert_sql);
+The line pstm = con->prepareStatement(insert_sql); is a crucial step in executing database operations using the MySQL Connector/C++ library.
+Meaning and Work
+This statement means you are preparing a PreparedStatement object to execute a specific SQL command, typically an INSERT statement, in a safe and efficient manner.
+1. Meaning (Preparation)
+pstm: This is a pointer to an sql::PreparedStatement object.
+con: This is a pointer to the active sql::Connection object.
+con->prepareStatement(insert_sql): This method is called on the connection object to parse and pre-compile the SQL query (insert_sql) on the database server.
+2. Work (Security and Efficiency)
+The work of this method is twofold:
+Security (Parameterized Queries): The insert_sql string is expected to contain placeholders (usually question marks, ?) instead of actual data values. For example:
+SQL
+"INSERT INTO users (name, age) VALUES (?, ?)"
+The prepareStatement method sends this structure to the database. Later, you will bind the actual data to these placeholders.
+This separation of code (the SQL statement) and data prevents SQL injection attacks, as the data is never interpreted as executable code.
+
+14.
+        pstm->execute();
+            The work of pstm->execute(); is to send the complete SQL command (the pre-compiled structure plus all the bound data values) to the database server for execution.
+                   In short: it runs the query (like INSERT or UPDATE) that was prepared by the PreparedStatement object.
+
+15. if (search_address_upper != "ANY" && !search_address_upper.empty())
+ {
+     query_builder<<"AND UPPER(address) LIKE '%' "<<search_address_upper<< "%'";
+ }
+AND UPPER(address) LIKE '%MAIN%'
+This tells the database to return records where the address column contains the word "main" (or "Main," "mAiN," etc.) anywhere within the string.
+
+16
+UPDATE mess_info SET column_name = ? WHERE id = ?
+                                      ^        ^
+                                index=1   index=2
