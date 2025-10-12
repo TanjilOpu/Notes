@@ -5,10 +5,12 @@ for in-memory formatting, type conversion (e.g., number-to-string and vice-versa
 
 
 2. #include<limits>
-Common Use: Accessing the maximum and minimum possible values for a given type, determining its size, or checking if it's signed.
+Common Use: Accessing the maximum and minimum possible values for a given type, 
+determining its size, or checking if it's signed.
 
 3. #include<algorithm>
-It contains non-member functions that implement common algorithms like sorting, searching, modifying, and comparing data sequences.
+It contains non-member functions that implement common algorithms like sorting, searching, 
+modifying, and comparing data sequences.
 
 4.#include<cctype>
 certain category type like(ischar,islower,isupper,isdigit)
@@ -121,7 +123,7 @@ catch (sql::SQLException& e)
 Reports the Error. It prints an error message to the standard error stream (cerr), 
 including the descriptive text provided by the e.what() method. connection lost, invalid SQL, table already exists
 
-throw:   This ensures that the error is not simply swallowed; it allows functions higher up the call stack to be informed that
+throw:   This ensures that the error is not simply swallowed( gile fela) ; it allows functions higher up the call stack to be informed that
            the database setup failed, typically leading to the termination of the program
 
 13.
