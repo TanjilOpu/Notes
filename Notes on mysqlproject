@@ -89,7 +89,7 @@ This is the entire body of the function.
 It declares a pointer named stmt of type sql::Statement. This is the object used to execute SQL commands.
 It initializes this pointer to nullptr (a null pointer).
 
-
+8 9 10 are linked with each other
 9.
 con->setSchema(DB_NAME) is a method call in C++ using the MySQL Connector/C++ library. 
 Its work is to specify the default database (schema) that all subsequent SQL statements will operate on using the given connection.
@@ -169,38 +169,44 @@ pstm->setInt(1, mess_id);
 
 
 explanation: 1️ string delete_sql = "DELETE FROM mess_info WHERE id = ?";
-
 This line defines an SQL command that will delete a record from the table mess_info.
-
 WHERE id = ? means we’re not directly putting the ID in the query yet — instead, the question mark (?) is a placeholder.
-
 This is part of using a Prepared Statement, which helps prevent SQL injection and allows MySQL to optimize query execution.
-
 So the SQL query template looks like:
-
 DELETE FROM mess_info WHERE id = ?
-
-
 The ? will later be replaced by an actual value.
 
 2️ pstm = con->prepareStatement(delete_sql);
-
 Here, con is a pointer to a MySQL connection object (like a “gateway” to your database).
-
 prepareStatement(delete_sql) tells MySQL:
-
 “Prepare this SQL command for execution, but I’ll give you the exact value later.”
-
 It returns a pointer to a prepared statement object, which we store in pstm.
-
 So now pstm can be used to safely insert values and execute the SQL.
 
 3️ pstm->setInt(1, mess_id);
-
 setInt() sets the first placeholder (?) in the SQL query to an integer value.
 
 1 → means the first ? placeholder.
-
 mess_id → is the C++ variable that holds the ID you want to delete.
-
 If mess_id = 5, then the final SQL sent to MySQL becomes:
+
+
+18.
+        int rows_affected = pstm->executeUpdate();
+pstm	Prepared Statement Pointer	A pointer to the object holding the pre-compiled SQL command (like UPDATE or DELETE) 
+and the data values (like mess_id).
+->executeUpdate()	Execution Method	This method sends the complete SQL command to the MySQL database server and tells it to run. 
+It's used for commands that change the database (like INSERT, UPDATE, DELETE), not commands that retrieve data (SELECT).
+rows_affected	Return Value	The database returns an integer representing the number of rows that were successfully modified, inserted,
+or deleted by the command.
+int	Data Type	Declares the variable to store the integer result.
+
+19.
+  sql::Statement* stmt = nullptr;
+  sql::ResultSet* res = nullptr;
+sql::Statement* stmt = nullptr;	Statement Pointer	Used to send simple, direct, non-parameterized SQL commands (like creating a table 
+or running a query without user-input filtering).	nullptr (or NULL) means the pointer currently points to nothing.
+It's a placeholder until the code calls con->createStatement() to create the actual object.
+sql::ResultSet* res = nullptr;	ResultSet Pointer	Used to hold the results (rows and columns of data) returned 
+from the database after a successful SELECT query is executed.	nullptr means the pointer currently holds no data. 
+It's set after a successful query (e.g., stmt->executeQuery()).
