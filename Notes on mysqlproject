@@ -210,3 +210,24 @@ It's a placeholder until the code calls con->createStatement() to create the act
 sql::ResultSet* res = nullptr;	ResultSet Pointer	Used to hold the results (rows and columns of data) returned 
 from the database after a successful SELECT query is executed.	nullptr means the pointer currently holds no data. 
 It's set after a successful query (e.g., stmt->executeQuery()).
+
+20.        stmt = con->createStatement();
+The primary work of con->createStatement() is to create and return a pointer to a new sql::Statement object.
+This new Statement object acts as a simple container or executor for sending basic, non-parameterized SQL commands (like CREATE TABLE, DROP TABLE,
+or SELECT * FROM table;) directly to the connected database (con).
+It's the mechanism you use to run static queries, unlike a PreparedStatement, which is used for dynamic queries with placeholders.
+
+21.    sql::PreparedStatement* pstm = nullptr;
+This line declares a pointer named pstm to a sql::PreparedStatement object and initializes it to nullptr.
+
+Work: It creates a placeholder for an object that will later be used to safely and efficiently execute parameterized SQL queries 
+(like INSERT, UPDATE, or DELETE) against the database
+
+22.  pstm = con->prepareStatement(insert_sql);
+
+The work of the line pstm = con->prepareStatement(insert_sql); is to prepare a structured SQL command for safe execution.
+Part	Role	Explanation
+con	Connection Object	The active connection to the MySQL database server.
+->prepareStatement()	Method Call	This function sends the SQL string (insert_sql) to the database server. 
+The server then parses, compiles, and optimizes the query structure (which contains placeholders like ?).
+pstm	Result (Pointer)	The function returns a pointer to a new sql::PreparedStatement object. This object now holds the ready-to-run query template, allowing you to securely bind values to the placeholders (?) before execution
